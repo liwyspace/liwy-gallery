@@ -1,0 +1,24 @@
+{
+  "name": "liwy-gallery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liwyspace/liwy-gallery.git"
+  },
+  "author": "liwy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liwyspace/liwy-gallery/issues"
+  },
+  "homepage": "https://github.com/liwyspace/liwy-gallery#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "webpack": "^3.5.4",
+    "webpack-dev-server": "^2.7.1"
+  }
+}
