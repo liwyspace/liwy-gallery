@@ -57,7 +57,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    
+    grunt.registerTask('serve', function (target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'open:dist', 'connect:dist']);
+        }
+
+        grunt.task.run([
+            'open:dev',
+            'webpack-dev-server'
+        ]);
+    });
     grunt.registerTask('test', ['karma']);
     grunt.registerTask('build', ['clean', 'copy', 'webpack']);
     grunt.registerTask('default', []);
