@@ -48,6 +48,21 @@ function get30DegRandom() {
 
 //**************************图片框组件****************************
 var ImageFigure = React.createClass({
+	/*
+     * imgFigure 的点击处理函数
+     */
+    handleClick: function (e) {
+
+      	if (this.props.arrange.isCenter) {
+        	this.props.inverse();
+      	} else {
+        	this.props.center();
+      	}
+
+      	e.stopPropagation();
+      	e.preventDefault();
+    },
+
 	render: function() {
 
 		var styleObj = {};
@@ -57,26 +72,31 @@ var ImageFigure = React.createClass({
             styleObj = this.props.arrange.pos;
         }
 
-        // // 如果图片的旋转角度有值并且不为0， 添加旋转角度
-        // if (this.props.arrange.rotate) {
-        //   (['MozTransform', 'msTransform', 'WebkitTransform', 'transform']).forEach(function (value) {
-        //     styleObj[value] = 'rotate(' + this.props.arrange.rotate + 'deg)';
-        //   }.bind(this));
-        // }
+        // 如果图片的旋转角度有值并且不为0， 添加旋转角度
+        if (this.props.arrange.rotate) {
+          	(['MozTransform', 'msTransform', 'WebkitTransform', 'transform']).forEach(function (value) {
+            	styleObj[value] = 'rotate(' + this.props.arrange.rotate + 'deg)';
+          	}.bind(this));
+        }
 
-        // // 如果是居中的图片， z-index设为11
-        // if (this.props.arrange.isCenter) {
-        //   styleObj.zIndex = 11;
-        // }
+        // 如果是居中的图片， z-index设为11
+        if (this.props.arrange.isCenter) {
+          	styleObj.zIndex = 11;
+        }
 
-        // var imgFigureClassName = 'img-figure';
-        //     imgFigureClassName += this.props.arrange.isInverse ? ' is-inverse' : '';
+        var imgFigureClassName = 'img-figure';
+            imgFigureClassName += this.props.arrange.isInverse ? ' is-inverse' : '';
 
 		return (
-			<figure className="img-figure" style={styleObj}>
+			<figure className={imgFigureClassName} style={styleObj} onClick={this.handleClick} >
 				<img src={this.props.data.imageURL} alt={this.props.data.title} />
 				<figcaption>
 					<h2 className="img-title">{this.props.data.title}</h2>
+					<div className="img-back" onClick={this.handleClick}>
+                      	<p>
+                        	{this.props.data.desc}
+                      	</p>
+                    </div>
 				</figcaption>
 			</figure>
 		);
@@ -254,6 +274,34 @@ var LiwyGallery = React.createClass({
 
 	},
 
+	/*
+	 * 翻转图片
+	 * @param index 传入当前被执行inverse操作的图片对应的图片信息数组的index值
+	 * @returns {Function} 这是一个闭包函数, 其内return一个真正待被执行的函数
+	 */
+	inverse: function (index) {
+	    return function () {
+	      	var imgsArrangeArr = this.state.imgsArrangeArr;
+
+	      	imgsArrangeArr[index].isInverse = !imgsArrangeArr[index].isInverse;
+
+	      	this.setState({
+	        	imgsArrangeArr: imgsArrangeArr
+	      	});
+	    }.bind(this);
+	},
+	
+	/*
+	 * 利用arrange函数， 居中对应index的图片
+	 * @param index, 需要被居中的图片对应的图片信息数组的index值
+	 * @returns {Function}
+	 */
+	center: function (index) {
+	    return function () {
+	      this.rearrange(index);
+	    }.bind(this);
+	},
+
     render: function() {
     	var imgFigures = [];
     	imageDatas.forEach(function(value,index){
@@ -262,10 +310,13 @@ var LiwyGallery = React.createClass({
     				pos: {
     					left: '0',
     					top: '0'
-    				}
+    				},
+    				rotate: 0,
+    				isInverse: false,
+    				isCenter: false
     			};
     		}
-    		imgFigures.push(<ImageFigure key={value.fileName} data={value} ref={'imgFigure' + index} arrange={this.state.imgsArrangeArr[index]} />);
+    		imgFigures.push(<ImageFigure key={value.fileName} data={value} ref={'imgFigure' + index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)} />);
     	}.bind(this));
 
         return (
