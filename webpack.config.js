@@ -1,15 +1,18 @@
 'use strict';
-const path = require('path');
-const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path');
+var webpack = require('webpack');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	resolve: {
 	    extensions: ['*', '.js', '.jsx'],
 	    alias: {
 	      'styles': __dirname + '/src/styles',
-	      'mixins': __dirname + '/src/mixins',
+	      'data': __dirname + '/src/data',
+	      'fonts': __dirname + '/src/fonts',
+	      'images': __dirname + '/src/images',
 	      'components': __dirname + '/src/components/'
 	    }
 	},
@@ -43,28 +46,47 @@ module.exports = {
 	      	test: /\.(js|jsx)$/,
 	      	exclude: /node_modules/,
 	      	use: ['babel-loader']
-	    }
-	    // , {
-	    //   	test: /\.scss/,
-	    //   	loader: 'style-loader!css-loader!autoprefixer-loader?{browsers:["last 2 version", "firefox 15"]}!sass-loader?outputStyle=expanded'
-	    // }, {
-	    //   	test: /\.css$/,
-	    //   	loader: 'style-loader!css-loader!autoprefixer-loader?{browsers:["last 2 version", "firefox 15"]}'
-	    // }, {
-	    //   	test: /\.json$/,
-	    //   	loader: 'json-loader'
-	    // }, {
-	    //   	test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
-	    //   	loader: 'url-loader?limit=8192'
-	    // }
-	    ]
+	    },
+	    {
+	      	test: /\.scss/,
+	      	use: [
+	      		'style-loader',
+	      		'css-loader',
+	      		// 'autoprefixer-loader?{browsers:["last 2 version", "Firefox 15"]}',
+	      		{
+	      			loader: 'autoprefixer-loader',
+	      			options: {browsers:["last 2 version", "Firefox 15"]}
+	      		},
+	      		// 'sass-loader?{outputStyle:'compact'}',
+	      		{
+	      			loader:'sass-loader',
+	      			options:{outputStyle:'compact'}
+	      		}
+	      	]
+	    },
+	    {
+	      	test: /\.css$/,
+	      	use: ['style-loader','css-loader','autoprefixer-loader?{browsers:["last 2 version", "firefox 15"]}']
+	    }, 
+	    {
+	      	test: /\.json$/,
+	      	use: ['json-loader']
+	    }, 
+	    {
+	      	test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
+	      	loader: 'url-loader?limit=8192'
+	    }]
 	},
 	plugins: [
-		new CleanWebpackPlugin(['dist']),
+		new CleanWebpackPlugin(['dist/**/*']),
+		new CopyWebpackPlugin([{
+			context: 'src',
+			from: '*.ico'
+		}]),
 		new HtmlWebpackPlugin({
 			template: 'src/index.html'
 		}),
-		// new webpack.HotModuleReplacementPlugin(),
+		new webpack.HotModuleReplacementPlugin(),
 		// new webpack.HashedModuleIdsPlugin(),
 		// new webpack.optimize.CommonsChunkPlugin({
 		// 	name: "React"
