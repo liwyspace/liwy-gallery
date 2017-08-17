@@ -1,9 +1,9 @@
 'use strict';
 var path = require('path');
 var webpack = require('webpack');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+// var CleanWebpackPlugin = require('clean-webpack-plugin');
+// var CopyWebpackPlugin = require('copy-webpack-plugin');
+// var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	resolve: {
@@ -21,17 +21,13 @@ module.exports = {
 		// vendor: ['React']
 	},
 	output: {
-		path: path.resolve(__dirname,'dist'),
-		publicPath: '/assets/',
+		path: path.resolve(__dirname,'dist/assets'),
+		publicPath: 'assets/',
 		filename: '[name].js',
 		// chunkFilename: '[name].[hash].js',
 	},
-	cache: true,
-	devtool: 'sourcemap',
-	devServer: {
-		contentBase: './dist',
-		hot: true
-	},
+
+	devtool: false,
 	stats: {
 		colors: true,
 		reasons: true
@@ -75,19 +71,24 @@ module.exports = {
 	    }, 
 	    {
 	      	test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
-	      	use: ['url-loader']
+	      	use: ['url-loader?limit=8192']
 	    }]
 	},
 	plugins: [
-		new CleanWebpackPlugin(['dist/**/*']),
-		new CopyWebpackPlugin([{
-			context: 'src',
-			from: '*.ico'
-		}]),
-		new HtmlWebpackPlugin({
-			template: 'src/index.html'
+		new webpack.DefinePlugin({
+			"process.env": { 
+			    NODE_ENV: JSON.stringify("production") 
+			 }
 		}),
-		new webpack.HotModuleReplacementPlugin(),
+		// new CleanWebpackPlugin(['dist/**/*']),
+		// new CopyWebpackPlugin([{
+		// 	context: 'src',
+		// 	from: '*.ico'
+		// }]),
+		// new HtmlWebpackPlugin({
+		// 	template: 'src/index.html'
+		// }),
+		// new webpack.HotModuleReplacementPlugin(),
 		// new webpack.HashedModuleIdsPlugin(),
 		// new webpack.optimize.CommonsChunkPlugin({
 		// 	name: "React"
@@ -95,6 +96,11 @@ module.exports = {
 		// new webpack.optimize.CommonsChunkPlugin({
 		// 	name: "commons"
 		// })
+		// new webpack.optimize.DedupePlugin(), //去重
+	    new webpack.optimize.UglifyJsPlugin(), //压缩js
+	    // new webpack.optimize.OccurenceOrderPlugin(), //比对id的使用频率和分布来得出最短的id分配给使用频率高的模块
+	    new webpack.optimize.AggressiveMergingPlugin(),
+	    // new webpack.NoErrorsPlugin()
 	]
 
 };
