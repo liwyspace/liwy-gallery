@@ -27,10 +27,6 @@
 # 待办事项
 1. 添加eslint语法校验
 
-# 参考项目
-* https://github.com/materliu/gallery-by-react
-* https://github.com/xiaolin/react-image-gallery
-
 ## 支持
 ![微信付款码](./weixin_fkcode.jpg)
 ![支付宝付款码](./zhifubao_fkcode.jpg)
