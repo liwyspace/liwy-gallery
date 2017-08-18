@@ -52,7 +52,7 @@ var ImageFigure = React.createClass({
      * imgFigure 的点击处理函数
      */
     handleClick: function (e) {
-
+        // debugger;
         if (this.props.arrange.isCenter) {
             this.props.inverse();
         } else {

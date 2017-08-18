@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack --config webpack.config.js",
+    "start": "webpack --config webpack.dist.config.js",
+    "start2": "webpack --config webpack.config.js",
     "server": "webpack-dev-server --config webpack.config.js --open"
   },
   "repository": {
@@ -42,6 +43,7 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
+    "karma-webpack": "^2.0.4",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

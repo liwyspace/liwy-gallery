@@ -19,10 +19,11 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     dot: true,
-                    src: ['dist']
+                    src: ['dist/']
                 }]
             },
-            tmp: ".tmp/"
+            tmp: ".tmp/",
+            test: "test/coverage/"
         },
         copy: {
             dist: {
@@ -205,11 +206,14 @@ module.exports = function (grunt) {
 
             dist: {
                 options: {
+                    open: {
+                        target: 'http://localhost:<%= connect.options.port %>/'
+                    },
                     keepalive: true,
                     middleware: function(connect, options, middlwares) {
                         return [
-                            require('serve-static')('.'),
-                            require('serve-index')('.')
+                            require('serve-static')('dist'),
+                            require('serve-index')('dist')
                         ];
                     }
                 }
@@ -221,9 +225,6 @@ module.exports = function (grunt) {
                 delay: 500
             },
             dev: {
-                path: 'http://localhost:<%= connect.options.port %>/webpack-dev-server/'
-            },
-            dist: {
                 path: 'http://localhost:<%= connect.options.port %>/'
             }
         },
@@ -231,32 +232,31 @@ module.exports = function (grunt) {
         //启动karma测试
         karma: {
           unit: {
-            configFile: 'karma.conf.js',
-            background: true,
-            singleRun: false,
-            autoWatch: false
+            configFile: 'karma.conf.js'
           }
         },
 
         webpack: {
-            options: webpackDistConfig,
-            dist: {
-                cache: false
-            }
+            // options: webpackDistConfig,
+            dist: webpackDistConfig,
+            // dist: {
+            //     cache: true
+            // }
         },
 
         'webpack-dev-server': {
             options: {
-                hot: true,
-                port: 8000,
                 webpack: webpackDevConfig,
+                port: 8000,
+                contentBase: './src',
                 publicPath: '/assets/',
-                contentBase: './src/'
+                hot: true
             },
+
             start: {
-                keepAlive: true
+                 keepalive: true
             }
-        }
+        },
     });
 
     // These plugins provide necessary tasks
@@ -280,7 +280,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open:dist', 'connect:dist']);
+            return grunt.task.run(['build', 'connect:dist']);
         }
 
         grunt.task.run([
@@ -288,7 +288,7 @@ module.exports = function (grunt) {
             'webpack-dev-server'
         ]);
     });
-    grunt.registerTask('test', ['karma']);
+    grunt.registerTask('test', ['clean:test','karma']);
     grunt.registerTask('build', ['clean', 'copy', 'webpack']);
     grunt.registerTask('default', []);
 };

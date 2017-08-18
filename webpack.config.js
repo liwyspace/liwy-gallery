@@ -21,15 +21,15 @@ module.exports = {
 		// vendor: ['React']
 	},
 	output: {
-		path: path.resolve(__dirname,'dist'),
-		publicPath: '/assets/',
+		path: path.resolve(__dirname,'dist/assets'),
+		publicPath: 'assets/',
 		filename: '[name].js',
 		// chunkFilename: '[name].[hash].js',
 	},
 	cache: true,
 	devtool: 'sourcemap',
 	devServer: {
-		contentBase: './dist',
+		contentBase: './src',
 		hot: true
 	},
 	stats: {
@@ -75,18 +75,19 @@ module.exports = {
 	    }, 
 	    {
 	      	test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
-	      	use: ['url-loader']
+	      	use: ['url-loader?limit=8192']
 	    }]
 	},
 	plugins: [
-		new CleanWebpackPlugin(['dist/**/*']),
+		new CleanWebpackPlugin(['dist/']),
 		new CopyWebpackPlugin([{
 			context: 'src',
-			from: '*.ico'
+			from: '*',
+			to: path.resolve(__dirname,'dist')
 		}]),
-		new HtmlWebpackPlugin({
-			template: 'src/index.html'
-		}),
+		// new HtmlWebpackPlugin({
+		// 	template: 'src/index.html'
+		// }),
 		new webpack.HotModuleReplacementPlugin(),
 		// new webpack.HashedModuleIdsPlugin(),
 		// new webpack.optimize.CommonsChunkPlugin({

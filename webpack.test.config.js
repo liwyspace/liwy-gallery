@@ -1,9 +1,6 @@
 'use strict';
 var path = require('path');
 var webpack = require('webpack');
-// var CleanWebpackPlugin = require('clean-webpack-plugin');
-// var CopyWebpackPlugin = require('copy-webpack-plugin');
-// var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	resolve: {
@@ -16,29 +13,8 @@ module.exports = {
 	      'components': __dirname + '/src/components/'
 	    }
 	},
-	entry: {
-		main:'components/liwy-gallery.js'
-		// vendor: ['React']
-	},
-	output: {
-		path: path.resolve(__dirname,'dist/assets'),
-		publicPath: 'assets/',
-		filename: '[name].js',
-		// chunkFilename: '[name].[hash].js',
-	},
-	cache: false,
-	devtool: false,
-	stats: {
-		colors: true,
-		reasons: true
-	},
-	
+	cache: true,
 	module: {
-	    // preLoaders: [{
-	    //   	test: /\.(js|jsx)$/,
-	    //   	exclude: /node_modules/,
-	    //   	loader: 'eslint-loader'
-	    // }],
 	    rules: [{
 	      	test: /\.(js|jsx)$/,
 	      	exclude: /node_modules/,
@@ -73,31 +49,6 @@ module.exports = {
 	      	test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
 	      	use: ['url-loader?limit=8192']
 	    }]
-	},
-	plugins: [
-		new webpack.DefinePlugin({
-			"process.env": { 
-			    NODE_ENV: JSON.stringify("production") 
-			 }
-		}),
-		// new CleanWebpackPlugin(['dist/**/*']),
-		// new CopyWebpackPlugin([{
-		// 	context: 'src',
-		// 	from: '*.ico'
-		// }]),
-		// new HtmlWebpackPlugin({
-		// 	template: 'src/index.html'
-		// }),
-		// new webpack.HotModuleReplacementPlugin(),
-		// new webpack.HashedModuleIdsPlugin(),
-		// new webpack.optimize.CommonsChunkPlugin({
-		// 	name: "React"
-		// }),
-		// new webpack.optimize.CommonsChunkPlugin({
-		// 	name: "commons"
-		// })
-	    new webpack.optimize.UglifyJsPlugin(), //压缩js
-	    new webpack.optimize.AggressiveMergingPlugin()
-	]
+	}
 
 };

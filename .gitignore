@@ -28,5 +28,6 @@ $RECYCLE.BIN/
 # App specific
 
 node_modules/
-.tmp
-dist
+.tmp/
+dist/
+test/coverage/
