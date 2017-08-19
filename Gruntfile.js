@@ -44,7 +44,7 @@ module.exports = function (grunt) {
         // sass: {
         //     dist: {
         //         options: {
-        //             style: 'compact'
+        //             outputStyle: 'compact'
         //         },
         //         files: [{
         //             expand: true,
