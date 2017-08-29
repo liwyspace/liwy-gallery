@@ -13,7 +13,7 @@ module.exports = function (grunt) {
             '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
             '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-            ' Licensed <%= props.license %> */\n',
+            ' Licensed MIT */\n',
         // Task configuration
         clean: {
             dist: {
@@ -22,8 +22,10 @@ module.exports = function (grunt) {
                     src: ['dist/']
                 }]
             },
-            tmp: ".tmp/",
-            test: "test/coverage/"
+            test: "test/coverage/",
+            docs: {
+                src: ['docs/dist/','docs/src/assets/vendors/']
+            }
         },
         copy: {
             dist: {
@@ -36,38 +38,26 @@ module.exports = function (grunt) {
                         filter: 'isFile'
                     }
                 ]
+            },
+            docs: {
+                files: [{
+                    expand:true,
+                    cwd: 'bower_components/jquery/dist',
+                    src: ['jquery.min.js'],
+                    dest: 'docs/src/assets/vendors/'
+                },{
+                    expand:true,
+                    cwd: 'bower_components/bootstrap/dist',
+                    src: ['**'],
+                    dest: 'docs/src/assets/vendors/bootstrap/'
+                },{
+                    expand:true,
+                    cwd: 'dist/assets',
+                    src: ['*'],
+                    dest: 'docs/src/assets/vendors/liwy-gallery/'
+                }]
             }
         },
-
-
-        // //编译sass
-        // sass: {
-        //     dist: {
-        //         options: {
-        //             outputStyle: 'compact'
-        //         },
-        //         files: [{
-        //             expand: true,
-        //             cwd: 'src/sass',
-        //             src: ['*.scss'],
-        //             dest: 'src/css/',
-        //             ext: '.css'
-        //         }]
-        //     }
-        // },
-
-        // //校验js
-        // jshint: {
-        //     beforeconcat: {
-        //         src: 'src/js/*.js'
-        //     },
-        //     afterconcat: {
-        //         options: {
-        //             asi: true
-        //         },
-        //         src: 'dist/js/*.js'
-        //     }
-        // },
 
         // //合并文件
         // concat: {
@@ -81,25 +71,6 @@ module.exports = function (grunt) {
         //     }
         // },
         
-        // //压缩js
-        // uglify: {
-        //     options: {
-        //         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-        //             '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
-        //     },
-        //     dist: {
-        //         src: '.tmp/js/index.js',
-        //         dest: 'dist/js/index.min.js'
-        //     }
-        // },
-
-        // //压缩css
-        // cssmin: {
-        //     dist: {
-        //         src: '.tmp/css/style.css',
-        //         dest: 'dist/css/style.min.css'
-        //     }
-        // },
 
         // //压缩图片
         // imagemin: {
@@ -128,21 +99,20 @@ module.exports = function (grunt) {
         //     }
         // },
 
-        // //替换压缩后路径与rev重命名后路径
-        // usemin: {
-        //     html: 'dist/*.html',
-        //     css: 'dist/css/{,*/}*.css',
-        //     options: {
-        //         blockReplacements: {
-        //             css: function(block) {
-        //                 return '<link rel="stylesheet" type="text/css" href="'+block.dest+'">';
-        //             },
-        //             js: function(block) {
-        //                 return '<script type="text/javascript" src="'+block.dest+'"></script>';
-        //             }
-        //         }
-        //     }
-        // },
+        //替换压缩后路径与rev重命名后路径
+        usemin: {
+            html: 'docs/dist/*.html',
+            options: {
+                blockReplacements: {
+                    css: function(block) {
+                        return '<link rel="stylesheet" type="text/css" href="'+block.dest+'">';
+                    },
+                    js: function(block) {
+                        return '<script type="text/javascript" src="'+block.dest+'"></script>';
+                    }
+                }
+            }
+        },
 
         // //压缩html
         // htmlmin: {
@@ -217,6 +187,27 @@ module.exports = function (grunt) {
                         ];
                     }
                 }
+            },
+            docs: {
+                options: {
+                    port: 9000,
+                    livereload: true,
+                    base:'docs/dist',
+                    hostname: 'localhost',
+                    open: {
+                        target: 'http://localhost:9000/'
+                    },
+                    middleware: function(connect, options, middlwares) {
+                        return [
+                            require('connect-livereload')({
+                                hostname:'localhost',
+                                port:35729
+                            }),
+                            require('serve-static')('docs/dist'),
+                            require('serve-index')('docs/dist')
+                        ];
+                    }
+                }
             }
         },
 
@@ -237,11 +228,11 @@ module.exports = function (grunt) {
         },
 
         webpack: {
-            // options: webpackDistConfig,
-            dist: webpackDistConfig,
-            // dist: {
-            //     cache: true
-            // }
+            dist:webpackDistConfig,
+            docs: function(){
+                webpackDistConfig.output.publicPath='assets/vendors/liwy-gallery/'
+                return webpackDistConfig;
+            }
         },
 
         'webpack-dev-server': {
@@ -257,39 +248,137 @@ module.exports = function (grunt) {
                  keepalive: true
             }
         },
+
+        
+        //编译sass
+        sass: {
+            docs: {
+                options: {
+                    style: 'expanded',
+                    // includePaths: [ '<%= app.docs.src %>/assets/scss/']
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'docs/src/assets/scss/',
+                    src: '*.scss',
+                    dest: 'docs/src/assets/css/',
+                    ext: '.css'
+                }]
+            },
+        },
+        //为css添加浏览器前缀
+        autoprefixer: {
+            options: {
+                browser:['last 2 versions', 'ie7', 'ie8', 'ie9', 'ie10', 'ie11']
+            },
+            docs: {
+                files: [{
+                    expand: true,
+                    cwd: 'docs/dist/assets/css',
+                    src: '*.css',
+                    dest: 'docs/dist/assets/css'
+                }]
+            }
+        },
+        //压缩css
+        cssmin: {
+            docs: {
+                files: [{
+                    expand: true,
+                    cwd: 'docs/dist/assets/css/',
+                    src: '*.css',
+                    dest: 'docs/dist/assets/css/',
+                    ext: '.min.css'
+                }]
+            }
+        },
+        //校验js语法
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            docs: {
+                src: 'docs/dist/assets/js/*.js'
+            }
+        },
+        //压缩js
+        uglify: {
+            options: {
+                banner: '<%=banner%>',
+                sourceMap: true
+            },
+            docs: {
+                files: [{
+                    expand: true,
+                    cwd: 'docs/dist/assets/js/',
+                    src: '*.js',
+                    dest: 'docs/dist/assets/js/',
+                    ext: '.min.js'
+                }]
+            }
+        },
+        jekyll: {
+            options: {
+              config: '_config.yml'
+            },
+            dist: {}
+        },
+        //监听文件变化
+        watch: {
+            options: {
+                livereload: true
+            },
+            sassDocs: {
+                files: [ 'docs/src/assets/scss/*.scss' ],
+                tasks: [ 'sass:docs' ]
+            },
+            docs: {
+                files: [ 'docs/src/**/*'],
+                tasks: [ 'jekyll']
+            }
+        },
     });
 
     // These plugins provide necessary tasks
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    // grunt.loadNpmTasks('grunt-contrib-sass');
-    // grunt.loadNpmTasks('grunt-contrib-jshint');
-    // grunt.loadNpmTasks('grunt-contrib-concat');
-    // grunt.loadNpmTasks('grunt-contrib-uglify');
-    // grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-autoprefixer');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     // grunt.loadNpmTasks('grunt-contrib-imagemin');
     // grunt.loadNpmTasks('grunt-rev');
-    // grunt.loadNpmTasks('grunt-usemin');
+    grunt.loadNpmTasks('grunt-usemin');
     // grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    // grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-jekyll');
     
 
+    
+    grunt.registerTask('test', ['clean:test','karma']);
+    grunt.registerTask('build', function(target) {
+        var webpack = 'webpack:dist';
+        if(target==='docs') {
+            webpack = 'webpack:docs';
+        }
+        grunt.task.run(['clean:dist', 'copy', webpack]);
+    });
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'connect:dist']);
         }
 
-        grunt.task.run([
-            'open:dev',
-            'webpack-dev-server'
-        ]);
+        grunt.task.run(['open:dev','webpack-dev-server']);
     });
-    grunt.registerTask('test', ['clean:test','karma']);
-    grunt.registerTask('build', ['clean', 'copy', 'webpack']);
-    grunt.registerTask('default', ['serve:dist']);
+    grunt.registerTask('docs',['build:docs','clean:docs','copy:docs','sass:docs','jekyll','autoprefixer:docs',
+        'cssmin:docs','jshint:docs','uglify:docs','usemin','connect:docs']);
+    // grunt.registerTask('default', ['serve:dist']);
+    grunt.registerTask('docsdev',['build:docs','clean:docs','copy:docs','sass:docs','jekyll','connect:docs','watch']);
+    grunt.registerTask('default', ['docsdev']);
 };
 

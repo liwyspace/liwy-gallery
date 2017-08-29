@@ -1,0 +1,38 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="liwy slide document">
+<meta name="author" content="liwy">
+
+<title>
+  {% if page.layout == "home" %}
+    {{ page.title }}
+  {% else %}
+    {{ page.title }} &middot; liwy-gallery
+  {% endif %}
+</title>
+
+<!-- Bootstrap core CSS -->
+<link href="assets/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+{% if page.slug == "css" or page.slug == "components" or page.slug == "js" %}
+  <!-- Optional Bootstrap Theme -->
+  <link href="data:text/css;charset=utf-8," data-href="assets/vendors/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" id="bs-theme-stylesheet">
+{% endif %}
+
+<!-- Documentation extras -->
+<!-- build:css assets/css/docs.min.css -->
+<link href="assets/css/docs.css" rel="stylesheet">
+<!-- endbuild -->
+
+<!--[if lt IE 9]><script src="../assets/vendors/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="assets/vendors/ie-emulation-modes-warning.js"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="favicon.ico">

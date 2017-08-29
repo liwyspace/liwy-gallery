@@ -1,0 +1,17 @@
+{ 
+    "asi": true,
+    "boss": true,
+    "browser": true,
+    "debug": true,
+    "devel": true,
+    "eqeqeq": false, 
+    "eqnull": true, 
+    "laxbreak": true, 
+    "expr": true, 
+    "curly": true, 
+    "unused": false,
+    "validthis": true,
+    "jasmine": true,
+    "jquery": true,
+    "undef": true
+}

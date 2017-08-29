@@ -363,7 +363,7 @@ var LiwyGallery = React.createClass({
 
 ReactDom.render(
     <LiwyGallery />,
-    document.getElementById('content')
+    document.getElementById('liwy-gallery')
 );
 
 // export default LiwyGallery;  //ES6

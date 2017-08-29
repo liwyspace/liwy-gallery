@@ -1,0 +1,75 @@
+/*
+ * Footer
+ */
+.docs-footer {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-top: 100px;
+  color: #99979c;
+  text-align: center;
+  background-color: #2a2730;
+}
+.docs-footer a {
+  color: #fff;
+}
+ul.docs-footer-links {
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+ul.docs-footer-links li {
+  display: inline-block;
+}
+ul.docs-footer-links li + li {
+  margin-left: 15px;
+}
+
+@media (min-width: 768px) {
+  .docs-footer {
+    text-align: left;
+  }
+
+  .docs-footer p {
+    margin-bottom: 0;
+  }
+}
+/*
+ * Main navigation
+ *
+ * Turn the `.navbar` at the top of the docs purple.
+ */
+.docs-nav {
+  margin-bottom: 50px;
+}
+
+.bs-home-nav .bs-nav-b {
+  display: none;
+}
+
+.bs-docs-nav .navbar-brand,
+.bs-docs-nav .navbar-nav > li > a {
+  font-weight: 500;
+  color: #563d7c;
+}
+
+.bs-docs-nav .navbar-nav > li > a:hover,
+.bs-docs-nav .navbar-nav > .active > a,
+.bs-docs-nav .navbar-nav > .active > a:hover {
+  color: #463265;
+  background-color: #f9f9f9;
+}
+
+.bs-docs-nav .navbar-toggle .icon-bar {
+  background-color: #563d7c;
+}
+
+.bs-docs-nav .navbar-header .navbar-toggle {
+  border-color: #fff;
+}
+
+.bs-docs-nav .navbar-header .navbar-toggle:hover,
+.bs-docs-nav .navbar-header .navbar-toggle:focus {
+  background-color: #f9f9f9;
+  border-color: #f9f9f9;
+}
+
+/*# sourceMappingURL=docs.css.map */
