@@ -19,6 +19,9 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="assets/vendors/jquery.min.js"></script>
 <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+{% if page.layout == "home" %}
+<script type="text/javascript" src="assets/vendors/liwy-gallery/main.js"></script>
+{% endif %}
 
 <!-- build:js assets/js/docs.min.js -->
 <script src="assets/js/docs.js"></script>

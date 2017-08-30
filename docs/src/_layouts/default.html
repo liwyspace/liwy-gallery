@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	{% include header.html %}
+</head>
+<body>
+	{% include nav/main.html %}
+
+	<div class="liwy-title">
+		<div class="container">
+			<h1>{{  page.title }}</h1>
+			<p>{{ page.lead }}</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				{{ content }}
+			</div>
+			<div class="col-md-3">
+				<nav class="hidden-xs hidden-sm affix-top liwy-sidebar">
+					<ul class="nav">
+						{% if page.slug == "about" %}
+							{% include nav/about.html %}
+						{% elsif page.slug == "" %}
+						{% endif %}
+					</ul>
+					<a href="#top">Back to top</a>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+	{% include footer.html %}
+
+</body>
+</html>
